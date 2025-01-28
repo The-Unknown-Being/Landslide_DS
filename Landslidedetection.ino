@@ -13,6 +13,11 @@ int upperThreshold = 1023;
 int turn = 1;
 int curr = 0;
 
+int alertPin_buzzer = 3;
+int alertPin_led = 4;
+int alertThreshold = 60;
+int pressThreshold = 10;
+
 void pwd(char* txt, int time) // prints txt and delays by time seconds
 {
   lcd.clear();
@@ -68,6 +73,24 @@ void caliberate()
   pwd("Caliberated!!", 1);
 }
 
+void checkAlert(int soilMoisturePercent)
+{
+  if(soilMoisturePercent >= alertThreshold)
+  {
+    digitalWrite(alertPin_buzzer, HIGH);
+    digitalWrite(alertPin_led, HIGH);
+  }
+}
+
+void resetAlert(int soilMoisturePercent)
+{
+  if(soilMoisturePercent < alertThreshold)
+  {
+    digitalWrite(alertPin_buzzer, LOW);
+    digitalWrite(alertPin_led, LOW);
+  }
+}
+
 
 void setup()
 {
@@ -92,6 +115,9 @@ void loop()
   lcd.print(lcdTxt);
   delay(1000);
   lcd.clear();
+
+  checkAlert(curr);
+  resetAlert(curr);
 }
 
  
